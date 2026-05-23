@@ -41,7 +41,7 @@ PLUGIN = {
             description = "Local HTTP mirror server (mirror.http_server/node)",
             vars = {
                 SDK_NODE_MIRROR = "{http_server}/node",
-                SDK_FLAT_MIRROR = "1"
+                SDK_NODE_FLAT = "1"
             }
         },
     }

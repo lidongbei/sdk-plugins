@@ -38,7 +38,7 @@ PLUGIN = {
             vars = {
                 SDK_JAVA_API    = "https://api.adoptium.net/v3",
                 SDK_JAVA_MIRROR = "{http_server}/java",
-                SDK_FLAT_MIRROR = "1"
+                SDK_JAVA_FLAT = "1"
             }
         },
     }

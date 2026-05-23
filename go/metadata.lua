@@ -38,7 +38,7 @@ PLUGIN = {
             description = "Local HTTP mirror server (mirror.http_server/go)",
             vars = {
                 SDK_GO_MIRROR   = "{http_server}/go",
-                SDK_FLAT_MIRROR = "1"
+                SDK_GO_FLAT = "1"
             }
         },
     }

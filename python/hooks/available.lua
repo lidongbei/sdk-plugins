@@ -6,7 +6,7 @@ local BASE_URL = os.getenv("SDK_PYTHON_MIRROR") or "https://www.python.org"
 
 local function is_flat(path)
     -- Use flat file structure when: local filesystem path OR http-server profile
-    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_PYTHON_FLAT") == "1"
 end
 
 function PLUGIN:Available(ctx)

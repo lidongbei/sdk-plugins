@@ -8,7 +8,7 @@ local BASE_URL = os.getenv("SDK_RUSTUP_MIRROR") or "https://static.rust-lang.org
 
 local function is_flat(path)
     -- Use flat file structure when: local filesystem path OR http-server profile
-    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_RUST_FLAT") == "1"
 end
 
 function PLUGIN:PreInstall(ctx)

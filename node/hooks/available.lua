@@ -5,7 +5,7 @@ local BASE_URL = os.getenv("SDK_NODE_MIRROR") or "https://nodejs.org/dist"
 
 local function is_flat(path)
     -- Use flat file structure when: local filesystem path OR http-server profile
-    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_NODE_FLAT") == "1"
 end
 
 function PLUGIN:Available(ctx)
