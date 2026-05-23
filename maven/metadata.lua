@@ -10,23 +10,28 @@ PLUGIN = {
     mirrors = {
         {
             name = "default",
-            description = "Apache Archive (archive.apache.org)",
-            vars = { SDK_MAVEN_MIRROR = "https://archive.apache.org/dist/maven/maven-3" }
+            description = "Apache CDN (dlcdn.apache.org)",
+            vars = { SDK_MAVEN_MIRROR = "https://dlcdn.apache.org/maven" }
+        },
+        {
+            name = "archive",
+            description = "Apache Archive (archive.apache.org) — full history incl. older releases",
+            vars = { SDK_MAVEN_MIRROR = "https://archive.apache.org/dist/maven" }
         },
         {
             name = "china",
-            description = "Aliyun Apache mirror",
-            vars = { SDK_MAVEN_MIRROR = "https://mirrors.aliyun.com/apache/maven/maven-3" }
+            description = "Huawei Cloud Apache mirror — full archive, ~200ms",
+            vars = { SDK_MAVEN_MIRROR = "https://mirrors.huaweicloud.com/apache/maven" }
+        },
+        {
+            name = "aliyun",
+            description = "Aliyun Apache mirror — latest version only",
+            vars = { SDK_MAVEN_MIRROR = "https://mirrors.aliyun.com/apache/maven" }
         },
         {
             name = "tencent",
-            description = "Tencent Cloud Apache mirror",
-            vars = { SDK_MAVEN_MIRROR = "https://mirrors.cloud.tencent.com/apache/maven/maven-3" }
-        },
-        {
-            name = "huawei",
-            description = "Huawei Cloud Apache mirror",
-            vars = { SDK_MAVEN_MIRROR = "https://mirrors.huaweicloud.com/apache/maven/maven-3" }
+            description = "Tencent Cloud Apache mirror — latest version only",
+            vars = { SDK_MAVEN_MIRROR = "https://mirrors.cloud.tencent.com/apache/maven" }
         },
         {
             name = "local",
