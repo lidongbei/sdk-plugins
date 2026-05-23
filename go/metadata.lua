@@ -5,5 +5,33 @@ PLUGIN = {
     updateUrl = "https://raw.githubusercontent.com/lidongbei/sdk-plugins/main/go/metadata.lua",
     homepage = "https://go.dev",
     minRuntimeVersion = "0.3.0",
-    legacyFilenames = {".go-version"}
+    legacyFilenames = {".go-version"},
+
+    mirrors = {
+        {
+            name = "default",
+            description = "Official (go.dev)",
+            vars = { SDK_GO_MIRROR = "https://go.dev" }
+        },
+        {
+            name = "china",
+            description = "GoLang China mirror (golang.google.cn)",
+            vars = { SDK_GO_MIRROR = "https://golang.google.cn" }
+        },
+        {
+            name = "aliyun",
+            description = "Aliyun mirror",
+            vars = { SDK_GO_MIRROR = "https://mirrors.aliyun.com/golang" }
+        },
+        {
+            name = "ustc",
+            description = "USTC mirror",
+            vars = { SDK_GO_MIRROR = "https://mirrors.ustc.edu.cn/golang" }
+        },
+        {
+            name = "local",
+            description = "Local HTTP mirror",
+            vars = { SDK_GO_MIRROR = "http://localhost:8080/golang" }
+        },
+    }
 }

@@ -5,5 +5,40 @@ PLUGIN = {
     updateUrl = "https://raw.githubusercontent.com/lidongbei/sdk-plugins/main/gradle/metadata.lua",
     homepage = "https://gradle.org",
     minRuntimeVersion = "0.3.0",
-    legacyFilenames = {".gradle-version"}
+    legacyFilenames = {".gradle-version"},
+
+    mirrors = {
+        {
+            name = "default",
+            description = "Official (services.gradle.org)",
+            vars = {
+                SDK_GRADLE_API    = "https://services.gradle.org/versions/all",
+                SDK_GRADLE_MIRROR = "https://services.gradle.org/distributions"
+            }
+        },
+        {
+            name = "china",
+            description = "Tencent Cloud Gradle mirror",
+            vars = {
+                SDK_GRADLE_API    = "https://services.gradle.org/versions/all",
+                SDK_GRADLE_MIRROR = "https://mirrors.cloud.tencent.com/gradle"
+            }
+        },
+        {
+            name = "aliyun",
+            description = "Aliyun Gradle mirror",
+            vars = {
+                SDK_GRADLE_API    = "https://services.gradle.org/versions/all",
+                SDK_GRADLE_MIRROR = "https://mirrors.aliyun.com/gradle"
+            }
+        },
+        {
+            name = "local",
+            description = "Local HTTP mirror",
+            vars = {
+                SDK_GRADLE_API    = "http://localhost:8080/gradle/versions/all",
+                SDK_GRADLE_MIRROR = "http://localhost:8080/gradle"
+            }
+        },
+    }
 }
