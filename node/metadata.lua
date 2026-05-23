@@ -19,7 +19,7 @@ PLUGIN = {
         {
             name = "china",
             description = "npmmirror CDN (China)",
-            vars = { SDK_NODE_MIRROR = "https://registry.npmmirror.com/mirrors/node" }
+            vars = { SDK_NODE_MIRROR = "https://registry.npmmirror.com/-/binary/node" }
         },
         {
             name = "tencent",
