@@ -31,8 +31,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local HTTP mirror (http://localhost:8080/nodejs)",
-            vars = { SDK_NODE_MIRROR = "http://localhost:8080/nodejs" }
+            description = "Local file system mirror (/opt/sdk-mirror/node)",
+            vars = { SDK_NODE_MIRROR = "/opt/sdk-mirror/node" }
         },
     }
 }

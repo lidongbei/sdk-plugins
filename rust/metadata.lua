@@ -29,8 +29,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local HTTP mirror",
-            vars = { SDK_RUSTUP_MIRROR = "http://localhost:8080/rust" }
+            description = "Local file system mirror (/opt/sdk-mirror/rust)",
+            vars = { SDK_RUSTUP_MIRROR = "/opt/sdk-mirror/rust" }
         },
     }
 }

@@ -35,10 +35,10 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local HTTP mirror",
+            description = "Local file system mirror (/opt/sdk-mirror/python)",
             vars = {
-                SDK_PYTHON_MIRROR           = "http://localhost:8080/python",
-                SDK_PYTHON_STANDALONE_MIRROR = "http://localhost:8080/python-standalone"
+                SDK_PYTHON_MIRROR           = "/opt/sdk-mirror/python",
+                SDK_PYTHON_STANDALONE_MIRROR = "/opt/sdk-mirror/python-standalone"
             }
         },
     }

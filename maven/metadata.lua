@@ -30,8 +30,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local HTTP mirror",
-            vars = { SDK_MAVEN_MIRROR = "http://localhost:8080/maven" }
+            description = "Local file system mirror (/opt/sdk-mirror/maven)",
+            vars = { SDK_MAVEN_MIRROR = "/opt/sdk-mirror/maven" }
         },
     }
 }

@@ -30,8 +30,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local HTTP mirror",
-            vars = { SDK_GO_MIRROR = "http://localhost:8080/golang" }
+            description = "Local file system mirror (/opt/sdk-mirror/go)",
+            vars = { SDK_GO_MIRROR = "/opt/sdk-mirror/go" }
         },
     }
 }
