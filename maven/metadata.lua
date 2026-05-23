@@ -30,8 +30,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local file system mirror (/opt/sdk-mirror/maven)",
-            vars = { SDK_MAVEN_MIRROR = "/opt/sdk-mirror/maven" }
+            description = "Local file system mirror (mirror.local_dir/maven)",
+            vars = { SDK_MAVEN_MIRROR = "{local_dir}/maven" }
         },
     }
 }

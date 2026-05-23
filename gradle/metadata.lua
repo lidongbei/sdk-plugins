@@ -34,10 +34,10 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local file system mirror (/opt/sdk-mirror/gradle)",
+            description = "Local file system mirror (mirror.local_dir/gradle)",
             vars = {
                 SDK_GRADLE_API    = "https://services.gradle.org/versions/all",
-                SDK_GRADLE_MIRROR = "/opt/sdk-mirror/gradle"
+                SDK_GRADLE_MIRROR = "{local_dir}/gradle"
             }
         },
     }

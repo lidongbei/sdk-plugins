@@ -29,8 +29,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local file system mirror (/opt/sdk-mirror/rust)",
-            vars = { SDK_RUSTUP_MIRROR = "/opt/sdk-mirror/rust" }
+            description = "Local file system mirror (mirror.local_dir/rust)",
+            vars = { SDK_RUSTUP_MIRROR = "{local_dir}/rust" }
         },
     }
 }

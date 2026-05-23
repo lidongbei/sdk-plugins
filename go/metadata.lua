@@ -30,8 +30,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local file system mirror (/opt/sdk-mirror/go)",
-            vars = { SDK_GO_MIRROR = "/opt/sdk-mirror/go" }
+            description = "Local file system mirror (mirror.local_dir/go)",
+            vars = { SDK_GO_MIRROR = "{local_dir}/go" }
         },
     }
 }

@@ -34,10 +34,10 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local file system mirror (/opt/sdk-mirror/java)",
+            description = "Local file system mirror (mirror.local_dir/java)",
             vars = {
                 SDK_JAVA_API    = "https://api.adoptium.net/v3",
-                SDK_JAVA_MIRROR = "/opt/sdk-mirror/java"
+                SDK_JAVA_MIRROR = "{local_dir}/java"
             }
         },
     }

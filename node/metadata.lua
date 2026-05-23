@@ -8,6 +8,8 @@ PLUGIN = {
     legacyFilenames = {".nvmrc", ".node-version"},
 
     -- Mirror profiles: switch with `sdk mirror use <profile> [node]`
+    -- Use `sdk config set mirror.local_dir /your/path` to configure the local mirror directory.
+    -- Defaults to ~/.sdk/downloads/ when not set.
     mirrors = {
         {
             name = "default",
@@ -31,8 +33,8 @@ PLUGIN = {
         },
         {
             name = "local",
-            description = "Local file system mirror (/opt/sdk-mirror/node)",
-            vars = { SDK_NODE_MIRROR = "/opt/sdk-mirror/node" }
+            description = "Local file system mirror (mirror.local_dir/node)",
+            vars = { SDK_NODE_MIRROR = "{local_dir}/node" }
         },
     }
 }
