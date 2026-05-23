@@ -4,6 +4,10 @@ local json = require("json")
 local API_URL = os.getenv("SDK_JAVA_API") or "https://api.adoptium.net/v3"
 local MIRROR_URL = os.getenv("SDK_JAVA_MIRROR") or ""
 
+local function is_local(path)
+    return path:sub(1, 4) ~= "http"
+end
+
 function PLUGIN:PreInstall(ctx)
     local feature_version = ctx.version
     local os_type = OS_TYPE
@@ -48,7 +52,12 @@ function PLUGIN:PreInstall(ctx)
             "OpenJDK%sU-jdk_%s_%s_hotspot_latest.%s",
             feature_version, arch_name, os_name, ext
         )
-        url = string.format("%s/%s/%s", MIRROR_URL, feature_version, filename)
+        if is_local(MIRROR_URL) then
+            -- Local mirror: flat structure
+            url = MIRROR_URL .. "/" .. filename
+        else
+            url = string.format("%s/%s/%s", MIRROR_URL, feature_version, filename)
+        end
     end
 
     return {

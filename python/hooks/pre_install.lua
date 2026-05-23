@@ -1,13 +1,15 @@
 local BASE_URL = os.getenv("SDK_PYTHON_MIRROR") or "https://www.python.org"
 
+local function is_local(path)
+    return path:sub(1, 4) ~= "http"
+end
+
 function PLUGIN:PreInstall(ctx)
     local version = ctx.version
     local os_type = OS_TYPE
     local arch = ARCH_TYPE
 
     if os_type == "linux" then
-        -- Linux: use official source tarball, build from source is complex
-        -- Instead use prebuilt binaries from python-build-standalone project
         local standalone_base = os.getenv("SDK_PYTHON_STANDALONE_MIRROR")
             or "https://github.com/astral-sh/python-build-standalone/releases/download"
 
@@ -20,15 +22,19 @@ function PLUGIN:PreInstall(ctx)
             error("Unsupported arch: " .. tostring(arch))
         end
 
-        -- Example tag: 20240107
-        -- Filename: cpython-3.12.1+20240107-x86_64-unknown-linux-gnu-install_only.tar.gz
-        -- Note: caller should pin a release tag via SDK_PYTHON_STANDALONE_TAG
         local tag = os.getenv("SDK_PYTHON_STANDALONE_TAG") or "20240107"
         local filename = string.format(
             "cpython-%s+%s-%s-unknown-linux-gnu-install_only.tar.gz",
             version, tag, arch_name
         )
-        local url = string.format("%s/%s/%s", standalone_base, tag, filename)
+
+        local url
+        if is_local(standalone_base) then
+            -- Local mirror: flat structure
+            url = standalone_base .. "/" .. filename
+        else
+            url = string.format("%s/%s/%s", standalone_base, tag, filename)
+        end
         return { version = version, url = url }
 
     elseif os_type == "darwin" then
@@ -40,14 +46,26 @@ function PLUGIN:PreInstall(ctx)
         )
         local standalone_base = os.getenv("SDK_PYTHON_STANDALONE_MIRROR")
             or "https://github.com/astral-sh/python-build-standalone/releases/download"
-        local url = string.format("%s/%s/%s", standalone_base, tag, filename)
+
+        local url
+        if is_local(standalone_base) then
+            url = standalone_base .. "/" .. filename
+        else
+            url = string.format("%s/%s/%s", standalone_base, tag, filename)
+        end
         return { version = version, url = url }
 
     elseif os_type == "windows" then
-        -- Official Windows embeddable package
         local arch_name = (arch == "amd64") and "amd64" or "win32"
         local filename = string.format("python-%s-embed-%s.zip", version, arch_name)
-        local url = string.format("%s/ftp/python/%s/%s", BASE_URL, version, filename)
+
+        local url
+        if is_local(BASE_URL) then
+            -- Local mirror: flat structure
+            url = BASE_URL .. "/" .. filename
+        else
+            url = string.format("%s/ftp/python/%s/%s", BASE_URL, version, filename)
+        end
         return { version = version, url = url }
     else
         error("Unsupported OS: " .. tostring(os_type))

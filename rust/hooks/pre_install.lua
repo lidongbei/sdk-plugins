@@ -6,27 +6,42 @@ local BASE_URL = os.getenv("SDK_RUSTUP_MIRROR") or "https://static.rust-lang.org
 -- and set: export RUSTUP_DIST_SERVER=https://rsproxy.cn
 --           export RUSTUP_UPDATE_ROOT=https://rsproxy.cn/rustup
 
+local function is_local(path)
+    return path:sub(1, 4) ~= "http"
+end
+
 function PLUGIN:PreInstall(ctx)
     local version = ctx.version  -- "stable", "beta", "nightly", or "1.75.0"
     local os_type = OS_TYPE
     local arch = ARCH_TYPE
 
     if os_type == "windows" then
-        -- Windows: download rustup-init.exe and run it
         local arch_name = (arch == "amd64") and "x86_64" or "i686"
-        local url = string.format(
-            "%s/rustup/dist/%s-pc-windows-msvc/rustup-init.exe",
-            BASE_URL, arch_name
-        )
+        local url
+        if is_local(BASE_URL) then
+            -- Local mirror: flat structure
+            url = BASE_URL .. "/rustup-init.exe"
+        else
+            url = string.format(
+                "%s/rustup/dist/%s-pc-windows-msvc/rustup-init.exe",
+                BASE_URL, arch_name
+            )
+        end
         return { version = version, url = url }
     else
         local os_name = (os_type == "darwin") and "apple-darwin" or "unknown-linux-gnu"
         local arch_name = (arch == "arm64") and "aarch64" or "x86_64"
-        local target = string.format("%s-%s", arch_name, os_name)
-        local url = string.format(
-            "%s/rustup/dist/%s/rustup-init",
-            BASE_URL, target
-        )
+        local url
+        if is_local(BASE_URL) then
+            -- Local mirror: flat structure
+            url = BASE_URL .. "/rustup-init"
+        else
+            local target = string.format("%s-%s", arch_name, os_name)
+            url = string.format(
+                "%s/rustup/dist/%s/rustup-init",
+                BASE_URL, target
+            )
+        end
         return { version = version, url = url }
     end
 end

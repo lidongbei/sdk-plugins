@@ -1,5 +1,9 @@
 local BASE_URL = os.getenv("SDK_NODE_MIRROR") or "https://nodejs.org/dist"
 
+local function is_local(path)
+    return path:sub(1, 4) ~= "http"
+end
+
 function PLUGIN:PreInstall(ctx)
     local version = ctx.version
     local os_type = OS_TYPE   -- "darwin", "linux", "windows"
@@ -36,7 +40,14 @@ function PLUGIN:PreInstall(ctx)
     end
 
     local filename = string.format("node-v%s-%s-%s.%s", version, os_name, arch_name, ext)
-    local url = string.format("%s/v%s/%s", BASE_URL, version, filename)
+
+    local url
+    if is_local(BASE_URL) then
+        -- Local mirror: flat structure — files stored directly as <base>/<filename>
+        url = BASE_URL .. "/" .. filename
+    else
+        url = string.format("%s/v%s/%s", BASE_URL, version, filename)
+    end
 
     return {
         version = version,
