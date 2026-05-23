@@ -3,14 +3,15 @@ local json = require("json")
 
 local DL_URL = os.getenv("SDK_GO_MIRROR") or "https://go.dev"
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:Available(ctx)
     local result = {}
 
-    if is_local(DL_URL) then
+    if is_flat(DL_URL) then
         -- Local mirror: read versions.json (simple array of version strings)
         -- e.g. ["1.22.0", "1.21.5", "1.20.14"]
         local resp, err = http.get({ url = DL_URL .. "/versions.json" })

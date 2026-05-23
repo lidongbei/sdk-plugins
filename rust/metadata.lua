@@ -32,5 +32,13 @@ PLUGIN = {
             description = "Local file system mirror (mirror.local_dir/rust)",
             vars = { SDK_RUSTUP_MIRROR = "{local_dir}/rust" }
         },
+        {
+            name = "http-server",
+            description = "Local HTTP mirror server (mirror.http_server/rust)",
+            vars = {
+                SDK_RUSTUP_MIRROR = "{http_server}/rust",
+                SDK_FLAT_MIRROR   = "1"
+            }
+        },
     }
 }

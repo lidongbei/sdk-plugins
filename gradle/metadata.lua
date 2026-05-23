@@ -40,5 +40,14 @@ PLUGIN = {
                 SDK_GRADLE_MIRROR = "{local_dir}/gradle"
             }
         },
+        {
+            name = "http-server",
+            description = "Local HTTP mirror server (mirror.http_server/gradle)",
+            vars = {
+                SDK_GRADLE_API    = "https://services.gradle.org/versions/all",
+                SDK_GRADLE_MIRROR = "{http_server}/gradle",
+                SDK_FLAT_MIRROR   = "1"
+            }
+        },
     }
 }

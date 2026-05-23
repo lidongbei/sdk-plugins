@@ -1,7 +1,8 @@
 local BASE_URL = os.getenv("SDK_NODE_MIRROR") or "https://nodejs.org/dist"
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:PreInstall(ctx)
@@ -42,7 +43,7 @@ function PLUGIN:PreInstall(ctx)
     local filename = string.format("node-v%s-%s-%s.%s", version, os_name, arch_name, ext)
 
     local url
-    if is_local(BASE_URL) then
+    if is_flat(BASE_URL) then
         -- Local mirror: flat structure — files stored directly as <base>/<filename>
         url = BASE_URL .. "/" .. filename
     else

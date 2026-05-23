@@ -3,14 +3,15 @@ local json = require("json")
 
 local BASE_URL = os.getenv("SDK_NODE_MIRROR") or "https://nodejs.org/dist"
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:Available(ctx)
     local result = {}
 
-    if is_local(BASE_URL) then
+    if is_flat(BASE_URL) then
         -- Local mirror: read versions.json (simple array of version strings)
         -- e.g. ["24.16.0", "22.16.0", "20.19.2"]
         local resp, err = http.get({ url = BASE_URL .. "/versions.json" })

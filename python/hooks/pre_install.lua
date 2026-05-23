@@ -1,7 +1,8 @@
 local BASE_URL = os.getenv("SDK_PYTHON_MIRROR") or "https://www.python.org"
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:PreInstall(ctx)
@@ -29,7 +30,7 @@ function PLUGIN:PreInstall(ctx)
         )
 
         local url
-        if is_local(standalone_base) then
+        if is_flat(standalone_base) then
             -- Local mirror: flat structure
             url = standalone_base .. "/" .. filename
         else
@@ -48,7 +49,7 @@ function PLUGIN:PreInstall(ctx)
             or "https://github.com/astral-sh/python-build-standalone/releases/download"
 
         local url
-        if is_local(standalone_base) then
+        if is_flat(standalone_base) then
             url = standalone_base .. "/" .. filename
         else
             url = string.format("%s/%s/%s", standalone_base, tag, filename)
@@ -60,7 +61,7 @@ function PLUGIN:PreInstall(ctx)
         local filename = string.format("python-%s-embed-%s.zip", version, arch_name)
 
         local url
-        if is_local(BASE_URL) then
+        if is_flat(BASE_URL) then
             -- Local mirror: flat structure
             url = BASE_URL .. "/" .. filename
         else

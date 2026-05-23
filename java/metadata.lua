@@ -18,18 +18,10 @@ PLUGIN = {
         },
         {
             name = "china",
-            description = "Huawei Cloud Temurin mirror",
+            description = "QingHua mirror",
             vars = {
                 SDK_JAVA_API    = "https://api.adoptium.net/v3",
-                SDK_JAVA_MIRROR = "https://mirrors.huaweicloud.com/java/jdk"
-            }
-        },
-        {
-            name = "tencent",
-            description = "Tencent Cloud Temurin mirror",
-            vars = {
-                SDK_JAVA_API    = "https://api.adoptium.net/v3",
-                SDK_JAVA_MIRROR = "https://mirrors.cloud.tencent.com/AdoptOpenJDK"
+                SDK_JAVA_MIRROR = "https://mirrors.tuna.tsinghua.edu.cn/Adoptium"
             }
         },
         {
@@ -38,6 +30,15 @@ PLUGIN = {
             vars = {
                 SDK_JAVA_API    = "https://api.adoptium.net/v3",
                 SDK_JAVA_MIRROR = "{local_dir}/java"
+            }
+        },
+        {
+            name = "http-server",
+            description = "Local HTTP mirror server (mirror.http_server/java)",
+            vars = {
+                SDK_JAVA_API    = "https://api.adoptium.net/v3",
+                SDK_JAVA_MIRROR = "{http_server}/java",
+                SDK_FLAT_MIRROR = "1"
             }
         },
     }

@@ -1,7 +1,8 @@
 local REPO_URL = os.getenv("SDK_MAVEN_MIRROR") or "https://archive.apache.org/dist/maven/maven-3"
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:PreInstall(ctx)
@@ -15,7 +16,7 @@ function PLUGIN:PreInstall(ctx)
         filename = string.format("apache-maven-%s-bin.tar.gz", version)
     end
 
-    if is_local(REPO_URL) then
+    if is_flat(REPO_URL) then
         -- Local mirror: flat structure — files stored directly as <base>/<filename>
         url = REPO_URL .. "/" .. filename
     else

@@ -41,5 +41,14 @@ PLUGIN = {
                 SDK_PYTHON_STANDALONE_MIRROR = "{local_dir}/python-standalone"
             }
         },
+        {
+            name = "http-server",
+            description = "Local HTTP mirror server (mirror.http_server/python)",
+            vars = {
+                SDK_PYTHON_MIRROR            = "{http_server}/python",
+                SDK_PYTHON_STANDALONE_MIRROR = "{http_server}/python-standalone",
+                SDK_FLAT_MIRROR              = "1"
+            }
+        },
     }
 }

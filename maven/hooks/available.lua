@@ -6,14 +6,15 @@ local json = require("json")
 -- Override: export SDK_MAVEN_MIRROR=https://my-mirror/maven
 local REPO_URL = os.getenv("SDK_MAVEN_MIRROR") or "https://archive.apache.org/dist/maven/maven-3"
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:Available(ctx)
     local result = {}
 
-    if is_local(REPO_URL) then
+    if is_flat(REPO_URL) then
         -- Local mirror: read versions.json (simple array of version strings)
         -- e.g. ["3.9.6", "3.8.8", "3.6.3"]
         local resp, err = http.get({ url = REPO_URL .. "/versions.json" })

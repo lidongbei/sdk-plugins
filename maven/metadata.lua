@@ -33,5 +33,13 @@ PLUGIN = {
             description = "Local file system mirror (mirror.local_dir/maven)",
             vars = { SDK_MAVEN_MIRROR = "{local_dir}/maven" }
         },
+        {
+            name = "http-server",
+            description = "Local HTTP mirror server (mirror.http_server/maven)",
+            vars = {
+                SDK_MAVEN_MIRROR = "{http_server}/maven",
+                SDK_FLAT_MIRROR  = "1"
+            }
+        },
     }
 }

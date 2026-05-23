@@ -6,8 +6,9 @@ local BASE_URL = os.getenv("SDK_RUSTUP_MIRROR") or "https://static.rust-lang.org
 -- and set: export RUSTUP_DIST_SERVER=https://rsproxy.cn
 --           export RUSTUP_UPDATE_ROOT=https://rsproxy.cn/rustup
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:PreInstall(ctx)
@@ -18,7 +19,7 @@ function PLUGIN:PreInstall(ctx)
     if os_type == "windows" then
         local arch_name = (arch == "amd64") and "x86_64" or "i686"
         local url
-        if is_local(BASE_URL) then
+        if is_flat(BASE_URL) then
             -- Local mirror: flat structure
             url = BASE_URL .. "/rustup-init.exe"
         else
@@ -32,7 +33,7 @@ function PLUGIN:PreInstall(ctx)
         local os_name = (os_type == "darwin") and "apple-darwin" or "unknown-linux-gnu"
         local arch_name = (arch == "arm64") and "aarch64" or "x86_64"
         local url
-        if is_local(BASE_URL) then
+        if is_flat(BASE_URL) then
             -- Local mirror: flat structure
             url = BASE_URL .. "/rustup-init"
         else

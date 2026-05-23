@@ -33,5 +33,13 @@ PLUGIN = {
             description = "Local file system mirror (mirror.local_dir/go)",
             vars = { SDK_GO_MIRROR = "{local_dir}/go" }
         },
+        {
+            name = "http-server",
+            description = "Local HTTP mirror server (mirror.http_server/go)",
+            vars = {
+                SDK_GO_MIRROR   = "{http_server}/go",
+                SDK_FLAT_MIRROR = "1"
+            }
+        },
     }
 }

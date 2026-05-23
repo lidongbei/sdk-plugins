@@ -2,8 +2,9 @@ local DL_URL = os.getenv("SDK_GO_MIRROR") or "https://go.dev"
 -- Official mirror in China: https://gomirrors.org or https://dl.google.com/go
 -- Set: export SDK_GO_MIRROR=https://dl.google.com/go  (if go.dev is blocked)
 
-local function is_local(path)
-    return path:sub(1, 4) ~= "http"
+local function is_flat(path)
+    -- Use flat file structure when: local filesystem path OR http-server profile
+    return path:sub(1, 4) ~= "http" or os.getenv("SDK_FLAT_MIRROR") == "1"
 end
 
 function PLUGIN:PreInstall(ctx)
@@ -41,7 +42,7 @@ function PLUGIN:PreInstall(ctx)
     local filename = string.format("go%s.%s-%s.%s", version, os_name, arch_name, ext)
 
     local url
-    if is_local(DL_URL) then
+    if is_flat(DL_URL) then
         -- Local mirror: flat structure — files stored directly as <base>/<filename>
         url = DL_URL .. "/" .. filename
     else
