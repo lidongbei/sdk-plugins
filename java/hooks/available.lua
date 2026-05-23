@@ -1,14 +1,53 @@
 local http = require("http")
 local json = require("json")
 
--- Adoptium API for Eclipse Temurin builds
--- Override with: export SDK_JAVA_MIRROR=https://my-mirror/adoptium
-local API_URL = os.getenv("SDK_JAVA_API") or "https://api.adoptium.net/v3"
+-- Source: adoptium (default) | oracle | zulu
+local SOURCE  = os.getenv("SDK_JAVA_SOURCE") or "adoptium"
+local API_URL = os.getenv("SDK_JAVA_API")    or "https://api.adoptium.net/v3"
+
+-- Oracle JDK: no public JSON API; maintain static list of current LTS/GA releases.
+-- Oracle only hosts "latest" downloads for actively supported versions.
+local ORACLE_VERSIONS = {
+    { version = "25", note = "LTS" },
+    { version = "21", note = "LTS" },
+}
+
+-- Standard Java LTS versions (used for Zulu LTS annotation)
+local JAVA_LTS = { ["8"]=true, ["11"]=true, ["17"]=true, ["21"]=true, ["25"]=true }
 
 function PLUGIN:Available(ctx)
+    -- Oracle JDK source: return static curated version list
+    if SOURCE == "oracle" then
+        return ORACLE_VERSIONS
+    end
+
+    -- Azul Zulu: query metadata API for all available major versions
+    if SOURCE == "zulu" then
+        local zulu_api = API_URL or "https://api.azul.com/metadata/v1"
+        local url = zulu_api .. "/zulu/packages/?java_package_type=jdk&archive_type=tar.gz&latest=true&page_size=200"
+        local resp, err = http.get({ url = url })
+        if err ~= nil then
+            error("Failed to fetch Zulu releases: " .. tostring(err))
+        end
+        if resp.status_code ~= 200 then
+            error("Zulu API HTTP " .. resp.status_code)
+        end
+        local data = json.decode(resp.body)
+        local seen = {}
+        local result = {}
+        for _, pkg in ipairs(data) do
+            local major = tostring(pkg.java_version[1])
+            if not seen[major] then
+                seen[major] = true
+                table.insert(result, { version = major, note = JAVA_LTS[major] and "LTS" or "" })
+            end
+        end
+        table.sort(result, function(a, b) return tonumber(a.version) > tonumber(b.version) end)
+        return result
+    end
+
+    -- Adoptium / Temurin source (default)
     local result = {}
-    -- Fetch LTS versions first (8, 11, 17, 21)
-    local lts_versions = {"8", "11", "17", "21"}
     local all_versions = {}
 
     -- Get list of available feature versions
@@ -21,6 +60,11 @@ function PLUGIN:Available(ctx)
     end
 
     local data = json.decode(resp.body)
+    local lts_set = {}
+    for _, v in ipairs(data.available_lts_releases or {}) do
+        lts_set[tostring(v)] = true
+    end
+
     -- available_releases is array of feature versions (integers)
     for _, ver in ipairs(data.available_releases or {}) do
         table.insert(all_versions, tostring(ver))
@@ -32,13 +76,9 @@ function PLUGIN:Available(ctx)
     end)
 
     for _, feature_ver in ipairs(all_versions) do
-        local is_lts = false
-        for _, lts in ipairs(lts_versions) do
-            if lts == feature_ver then is_lts = true; break end
-        end
         table.insert(result, {
             version = feature_ver,
-            note = is_lts and "LTS" or ""
+            note = lts_set[feature_ver] and "LTS" or ""
         })
     end
 
