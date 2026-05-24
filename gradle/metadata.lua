@@ -18,7 +18,7 @@ PLUGIN = {
         },
         {
             name = "china",
-            description = "Tencent Cloud Gradle mirror \u2014 full archive, ~90ms",
+            description = "Tencent Cloud Gradle mirror — full archive, ~90ms",
             vars = {
                 SDK_GRADLE_API    = "https://services.gradle.org/versions/all",
                 SDK_GRADLE_MIRROR = "https://mirrors.cloud.tencent.com/gradle"
@@ -26,7 +26,7 @@ PLUGIN = {
         },
         {
             name = "huawei",
-            description = "Huawei Cloud Gradle mirror \u2014 full archive, ~170ms",
+            description = "Huawei Cloud Gradle mirror — full archive, ~170ms",
             vars = {
                 SDK_GRADLE_API    = "https://services.gradle.org/versions/all",
                 SDK_GRADLE_MIRROR = "https://mirrors.huaweicloud.com/gradle"

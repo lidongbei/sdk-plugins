@@ -28,7 +28,7 @@ PLUGIN = {
         },
         {
             name = "zulu",
-            description = "Azul Zulu JDK (azul.com) — certified OpenJDK, Java 6-25 incl. Java 8",
+            description = "Azul Zulu JDK (azul.com) — certified OpenJDK, Java 6-25 incl. Java 8; requires direct internet access (no China CDN available)",
             vars = {
                 SDK_JAVA_SOURCE = "zulu",
                 SDK_JAVA_API    = "https://api.azul.com/metadata/v1",
@@ -36,17 +36,8 @@ PLUGIN = {
             }
         },
         {
-            name = "zulu-china",
-            description = "Azul Zulu JDK via Huawei mirror (mirrors.huaweicloud.com) — China accelerated, Java 6-25 incl. Java 8 on all platforms",
-            vars = {
-                SDK_JAVA_SOURCE = "zulu",
-                SDK_JAVA_API    = "https://api.azul.com/metadata/v1",
-                SDK_JAVA_MIRROR = "https://mirrors.huaweicloud.com/zulu"
-            }
-        },
-        {
             name = "china",
-            description = "QingHua mirror",
+            description = "Eclipse Temurin via Tsinghua mirror (mirrors.tuna.tsinghua.edu.cn) — recommended for users in China",
             vars = {
                 SDK_JAVA_SOURCE = "adoptium",
                 SDK_JAVA_API    = "https://api.adoptium.net/v3",

@@ -72,12 +72,22 @@ function PLUGIN:PreInstall(ctx)
             error("Zulu API HTTP " .. resp.status_code)
         end
         local data = json.decode(resp.body)
-        -- Skip JavaFX-bundled packages, prefer plain JDK
+        -- Skip JavaFX-bundled and CRaC variant packages; prefer plain JDK
         local chosen
         for _, pkg in ipairs(data) do
-            if not pkg.name:find("-fx-") then
+            local name = pkg.name or ""
+            if not name:find("%-fx%-") and not name:find("%-crac%-") then
                 chosen = pkg
                 break
+            end
+        end
+        if not chosen then
+            -- Fallback: accept any non-fx package
+            for _, pkg in ipairs(data) do
+                if not (pkg.name or ""):find("%-fx%-") then
+                    chosen = pkg
+                    break
+                end
             end
         end
         if not chosen then chosen = data[1] end
@@ -86,12 +96,14 @@ function PLUGIN:PreInstall(ctx)
         end
         -- If a mirror is set, rewrite the CDN base URL in download_url
         local dl_url = chosen.download_url
+        local fallback_url = ""
         if MIRROR_URL ~= "" then
             -- cdn.azul.com/zulu/bin/filename -> ZULU_CDN/filename
             local filename = dl_url:match("/([^/]+)$")
+            fallback_url = dl_url   -- keep official CDN URL as fallback
             dl_url = ZULU_CDN .. "/" .. filename
         end
-        return { version = feature_version, url = dl_url }
+        return { version = feature_version, url = dl_url, fallback_url = fallback_url }
     end
 
     -- Adoptium / Temurin (default)
@@ -107,11 +119,13 @@ function PLUGIN:PreInstall(ctx)
     end
 
     -- flat mirror (local / http-server): download from pre-built flat dir
+    -- Adoptium API requires major version number only (e.g. "17" not "17.0.19")
+    local major_version = feature_version:match("^(%d+)")
     if MIRROR_URL ~= "" and is_flat(MIRROR_URL) then
         local ext = (os_type == "windows") and "zip" or "tar.gz"
         local filename = string.format(
             "OpenJDK%sU-jdk_%s_%s_hotspot_latest.%s",
-            feature_version, arch_name, os_name, ext
+            major_version, arch_name, os_name, ext
         )
         return {
             version = feature_version,
@@ -122,7 +136,7 @@ function PLUGIN:PreInstall(ctx)
     -- Use Adoptium API to find the exact download URL / filename
     local api_url = string.format(
         "%s/assets/latest/%s/hotspot?architecture=%s&image_type=jdk&jvm_impl=hotspot&os=%s&vendor=eclipse",
-        API_URL, feature_version, arch_name, os_name
+        API_URL, major_version, arch_name, os_name
     )
     local resp, err = http.get({ url = api_url })
     if err ~= nil then
@@ -137,20 +151,24 @@ function PLUGIN:PreInstall(ctx)
         error("No release found for Java " .. feature_version)
     end
 
-    local pkg      = data[1].binary.package
-    local filename = pkg.name   -- e.g. OpenJDK21U-jdk_x64_linux_hotspot_21.0.11_10.tar.gz
+    local release   = data[1]
+    local pkg       = release.binary.package
+    local filename  = pkg.name   -- e.g. OpenJDK21U-jdk_x64_linux_hotspot_21.0.11_10.tar.gz
+    -- Extract full semver from release name (e.g. "jdk-21.0.11+10" → "21.0.11")
+    local semver = release.version and release.version.semver or feature_version
+    local actual_version = semver:match("^(%d+%.%d+%.%d+)") or feature_version
 
     local url
     if MIRROR_URL ~= "" then
-        -- Hierarchical HTTP mirror (e.g. Tsinghua): {mirror}/{version}/jdk/{arch}/{os}/{filename}
+        -- Hierarchical HTTP mirror (e.g. Tsinghua): {mirror}/{major_version}/jdk/{arch}/{os}/{filename}
         url = string.format("%s/%s/jdk/%s/%s/%s",
-            MIRROR_URL, feature_version, arch_name, os_name, filename)
+            MIRROR_URL, major_version, arch_name, os_name, filename)
     else
         url = pkg.link
     end
 
     return {
-        version = feature_version,
+        version = actual_version,
         url     = url,
     }
 end

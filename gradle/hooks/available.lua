@@ -39,6 +39,8 @@ function PLUGIN:Available(ctx)
     end
 
     local data = json.decode(resp.body)
+    local stable = {}
+    local rc_list = {}
     local seen = {}
 
     for _, item in ipairs(data) do
@@ -46,11 +48,40 @@ function PLUGIN:Available(ctx)
             local ver = item.version
             if ver and not seen[ver] then
                 seen[ver] = true
-                local note = (item.rcFor and item.rcFor ~= "") and ("RC for " .. item.rcFor) or ""
-                table.insert(result, { version = ver, note = note })
+                local is_rc = (item.rcFor and item.rcFor ~= "") or ver:find("%-rc%-") or ver:find("%-milestone%-")
+                if is_rc then
+                    table.insert(rc_list, { version = ver, note = (item.rcFor and item.rcFor ~= "") and ("RC for " .. item.rcFor) or "preview" })
+                else
+                    table.insert(stable, { version = ver, note = "" })
+                end
             end
         end
     end
+
+    -- Sort stable versions descending by semver components
+    local function ver_cmp(a, b)
+        local function parts(s)
+            local t = {}
+            for n in (s.version .. ".0.0"):gmatch("(%d+)") do
+                table.insert(t, tonumber(n))
+                if #t == 3 then break end
+            end
+            return t
+        end
+        local pa, pb = parts(a), parts(b)
+        for i = 1, 3 do
+            if (pa[i] or 0) ~= (pb[i] or 0) then
+                return (pa[i] or 0) > (pb[i] or 0)
+            end
+        end
+        return false
+    end
+    table.sort(stable, ver_cmp)
+    table.sort(rc_list, ver_cmp)
+
+    -- Stable versions first, then RC/previews
+    for _, v in ipairs(stable) do table.insert(result, v) end
+    for _, v in ipairs(rc_list) do table.insert(result, v) end
 
     return result
 end
